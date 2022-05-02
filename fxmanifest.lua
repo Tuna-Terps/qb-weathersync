@@ -14,3 +14,4 @@ server_script 'server/server.lua'
 client_script 'client/client.lua'
 
 lua54 'yes'
+server_export 'weatherCb'
