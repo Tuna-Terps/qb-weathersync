@@ -6,6 +6,11 @@ local blackout = Config.Blackout
 local newWeatherTimer = Config.NewWeatherTimer
 local QBCore = exports['qb-core']:GetCoreObject()
 
+exports('weatherCb', function(cB)
+    cB = CurrentWeather
+    return cB
+end)
+
 local function isAllowedToChange(player)
     if QBCore.Functions.HasPermission(player, "admin") or IsPlayerAceAllowed(player, 'command') then
         return true
@@ -53,8 +58,18 @@ local function NextWeatherStage()
     TriggerEvent("qb-weathersync:server:RequestStateSync")
 end
 
+
 RegisterNetEvent('qb-weathersync:server:RequestStateSync', function()
-    TriggerClientEvent('qb-weathersync:client:SyncWeather', -1, CurrentWeather, blackout)
+    local blackout = exports.TunasPowerJob:checkBl()
+    local blackout2 = exports.TunasPowerJob:checkBl2()
+    local l = exports.TunasPlayerExports:sortLs()
+    local b = exports.TunasPlayerExports:sortBc()
+    for k, v in ipairs(l) do
+        TriggerClientEvent('qb-weathersync:client:SyncWeather', v, CurrentWeather, blackout)
+    end
+    for k, v in ipairs(b) do 
+        TriggerClientEvent('qb-weathersync:client:SyncWeather', v, CurrentWeather, blackout2)
+    end
     TriggerClientEvent('qb-weathersync:client:SyncTime', -1, baseTime, timeOffset, freezeTime)
 end)
 
